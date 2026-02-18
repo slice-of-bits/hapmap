@@ -1,65 +1,100 @@
 <script lang="ts">
-  import { eatersStore } from "../stores/eatersStore.svelte";
-  import type { RecipeIngredientOutSchema } from "$lib/client/types.gen";
-  import Ingredients from "./Ingredients.svelte";
-  import { onMount } from "svelte";
-  
-  export let title: string;
-  export let description: string;
-  export let date: string;
-  export let tags: string[];
-  export let ingredients: RecipeIngredientOutSchema[];
+	import type {
+		RecipeIngredientOutSchema,
+		RecipeNoteOutSchema,
+		RecipeStepOutSchema
+	} from '$lib/api/public-client/types.gen';
+	import SvelteMarkdown from 'svelte-markdown';
+	import { eatersStore } from '../stores/eatersStore.svelte';
+	import Ingredients from './Ingredients.svelte';
 
-  $: recipe_allergies = ingredients
-    .map((ingredient) => ingredient.ingredient.allergies)
-    .flat()
-    .filter(Boolean);
-  
-  onMount(() => {
-    window.print();
-  });
+	interface Props {
+		title: string;
+		description?: string | null;
+		ingredients?: RecipeIngredientOutSchema[];
+		notes?: RecipeNoteOutSchema[];
+		steps?: RecipeStepOutSchema[];
+	}
+
+	let { title, description = null, ingredients = [], notes = [], steps = [] }: Props = $props();
+
+	const recipeAllergyNames = $derived(
+		Array.from(
+			new Set(
+				ingredients
+					.flatMap((ingredient) => ingredient.ingredient.allergies ?? [])
+					.map((allergy) => allergy.name)
+			)
+		)
+	);
+
+	const relevantActiveAllergies = $derived(
+		eatersStore.getActiveAllergies().filter((name) => recipeAllergyNames.includes(name))
+	);
+
+	const sortedNotes = $derived([...notes].sort((a, b) => (a.order ?? 0) - (b.order ?? 0)));
+
+	const sortedSteps = $derived([...steps].sort((a, b) => a.order - b.order));
 </script>
 
-<h1 class="text-center font-bold text-3xl">
-  {title}
-</h1>
+<article class="mx-auto max-w-4xl text-black">
+	<header class="border-b border-black pb-4">
+		<h1 class="text-3xl font-bold">{title}</h1>
+		{#if description}
+			<p class="mt-2">{description}</p>
+		{/if}
+	</header>
 
-<div class="grid grid-cols-2">
-  <div>
-    <h2 class="font-bold text-xl pt-4">Ingrediënten</h2>
-    <Ingredients {ingredients} />
-  </div>
+	<div class="mt-5 grid grid-cols-1 gap-6 md:grid-cols-2">
+		<section>
+			<h2 class="text-xl font-semibold">Ingredienten</h2>
+			<Ingredients {ingredients} />
+		</section>
 
-  <div>
-    {#if recipe_allergies.length > 0}
-      <h2 class="font-bold text-xl pt-4">Allergenen</h2>
-      <ul>
-        {#each recipe_allergies as allergy}
-          {#if allergy}
-            <span>{allergy.name}, </span>
-          {/if}
-        {/each}
-      </ul>
-    {/if}
+		<section>
+			<h2 class="text-xl font-semibold">Eters</h2>
+			<p class="mt-1">Totaal: {eatersStore.totalEaters}</p>
+			{#if relevantActiveAllergies.length > 0}
+				<p class="mt-2">Waarvan met allergie:</p>
+				<ul class="list-disc pl-5">
+					{#each relevantActiveAllergies as allergyName (allergyName)}
+						<li>{allergyName}: {eatersStore.getEatersWithAllergy(allergyName)}</li>
+					{/each}
+				</ul>
+			{/if}
+			{#if recipeAllergyNames.length > 0}
+				<p class="mt-2">Allergenen in dit recept: {recipeAllergyNames.join(', ')}</p>
+			{/if}
+		</section>
+	</div>
 
-    <h2 class="font-bold text-xl pt-4">Eters</h2>
-    <span class="font-medium">Totaal: {eatersStore.totalEaters}</span><br/>
-    {#if eatersStore.getActiveAllergies().length > 0}
-      Waarvan met allergie:
-      <ul>
-        {#each eatersStore.getActiveAllergies() as allergyName}
-          {#if recipe_allergies.some((allergy) => allergy?.name === allergyName)}
-            <li>
-              {allergyName}: {eatersStore.getEatersWithAllergy(allergyName)}
-            </li>
-          {/if}
-        {/each}
-      </ul>
-    {/if}
-  </div>
-</div>
+	{#if sortedNotes.length > 0}
+		<section class="mt-5">
+			<h2 class="text-xl font-semibold">Notities</h2>
+			<ul class="list-disc pl-5">
+				{#each sortedNotes as note (note.sqid)}
+					<li>
+						{#if note.type}<span class="font-semibold uppercase">{note.type}:</span>
+						{/if}
+						{note.note}
+					</li>
+				{/each}
+			</ul>
+		</section>
+	{/if}
 
-<h2 class="font-bold text-xl pt-4">Bereiding</h2>
-<div class="prose max-w-full text-black prose-ul:text-black leading-5">
-  <slot></slot>
-</div>
+	{#if sortedSteps.length > 0}
+		<section class="mt-5">
+			<h2 class="text-xl font-semibold">Bereiding</h2>
+			<ol class="list-decimal space-y-2 pl-5">
+				{#each sortedSteps as step (step.sqid)}
+					<li>
+						<div class="prose max-w-none text-black">
+							<SvelteMarkdown source={step.instruction} />
+						</div>
+					</li>
+				{/each}
+			</ol>
+		</section>
+	{/if}
+</article>

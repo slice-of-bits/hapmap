@@ -1,24 +1,33 @@
 <script lang="ts">
-  import { eatersStore } from "../stores/eatersStore.svelte";
-  import type { AlternativeOutSchema } from "$lib/api/public-client/types.gen";
-  import UnitDisplay from "$lib/components/utils/UnitDisplay.svelte";
+	import type { AlternativeOutSchema } from '$lib/api/public-client/types.gen';
+	import UnitDisplay from '$lib/components/utils/UnitDisplay.svelte';
+	import { capitalizeFirstLetter } from '$lib/utils/units';
+	import { eatersStore } from '../stores/eatersStore.svelte';
 
-  interface Props {
-    alt_ingredient: AlternativeOutSchema;
-  }
+	interface Props {
+		altIngredient: AlternativeOutSchema;
+	}
 
-  let { alt_ingredient }: Props = $props();
+	let { altIngredient }: Props = $props();
 
-  const eatersWithAllergies = $derived(
-    eatersStore.getEatersWithAnyAllergy(alt_ingredient.for_allergies)
-  );
+	const eatersWithAllergies = $derived(
+		eatersStore.getEatersWithAnyAllergy(altIngredient.for_allergies)
+	);
+
+	const allergyNames = $derived(
+		(altIngredient.for_allergies ?? []).map((allergy) => allergy.name).join(', ')
+	);
 </script>
 
-<li>
-  <span class="pl-4">
-    <UnitDisplay
-      quantity={alt_ingredient.quantity * eatersWithAllergies}
-      unit={alt_ingredient.unit ?? null}
-    />
-  </span> - {alt_ingredient.alternative_ingredient.name_plural}
-</li>
+{#if eatersWithAllergies > 0}
+	<li class="ml-6 list-disc">
+		<UnitDisplay
+			quantity={altIngredient.quantity * eatersWithAllergies}
+			unit={altIngredient.unit ?? null}
+		/>
+		- {capitalizeFirstLetter(altIngredient.alternative_ingredient.name_plural)}
+		{#if allergyNames}
+			(voor {allergyNames})
+		{/if}
+	</li>
+{/if}
