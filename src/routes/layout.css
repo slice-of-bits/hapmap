@@ -1,3 +1,13 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
+
+:global(.svelte-select.filter-select .value-container .placeholder) {
+	color: rgb(100 116 139);
+}
+
+:global(.svelte-select.filter-select .value-container .selected-item),
+:global(.svelte-select.filter-select .value-container input),
+:global(.svelte-select.filter-select .list .item) {
+	color: rgb(15 23 42);
+}
