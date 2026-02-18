@@ -43,14 +43,14 @@
   </td>
   <td class="px-2 py-1">
     {#if ingredient.quantity}
-      <UnitDisplay quantity={ingredient.quantity} unit={ingredient.unit} />
+      <UnitDisplay quantity={ingredient.quantity} unit={ingredient.unit ?? null} />
     {/if}
   </td>
   <td class="px-2 py-1">
     {#if hasEatersWithAllergies}
-      <UnitDisplay quantity={quantityForNonAllergic} unit={ingredient.unit} />
+      <UnitDisplay quantity={quantityForNonAllergic} unit={ingredient.unit ?? null} />
     {:else}
-      <UnitDisplay quantity={totalQuantity} unit={ingredient.unit} />
+      <UnitDisplay quantity={totalQuantity} unit={ingredient.unit ?? null} />
     {/if}
   </td>
 </tr>

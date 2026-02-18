@@ -94,8 +94,12 @@
 	</div>
 
 	<div>
-		<label class="block text-sm font-medium text-gray-700 mb-2" id="allergieen-label">Allergieen</label>
-		<div class="space-y-2 max-h-48 overflow-y-auto border border-gray-300 rounded p-2">
+		<p class="block text-sm font-medium text-gray-700 mb-2" id="allergieen-label">Allergieen</p>
+		<div
+			class="space-y-2 max-h-48 overflow-y-auto border border-gray-300 rounded p-2"
+			role="group"
+			aria-labelledby="allergieen-label"
+		>
 			{#if availableAllergies.length === 0}
 				<div class="text-sm text-gray-500">Geen allergieen gevonden.</div>
 			{:else}

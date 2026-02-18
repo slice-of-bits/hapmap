@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Select from 'svelte-select';
-	import type { IngredientOutSchema } from '$lib/api/public-client/types.gen';
+	import type { IngredientOutSchema } from '$lib/api/private-client/types.gen';
 
 	interface Props {
 		ingredients: IngredientOutSchema[];

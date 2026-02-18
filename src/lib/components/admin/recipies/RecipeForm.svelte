@@ -1,13 +1,14 @@
 <script lang="ts">
 	import type {
-		RecipeOutSchema,
-		RecipeStepOutSchema,
-		RecipeIngredientOutSchema,
-		RecipeNoteOutSchema,
+		PrivateRecipeOutSchema,
+		PrivateRecipeStepOutSchema,
+		PrivateRecipeIngredientOutSchema,
+		PrivateRecipeNoteOutSchema,
 		IngredientOutSchema,
-		RecipeCategoryOutSchema,
-		AllergyOutSchema
-	} from '$lib/api/public-client/types.gen';
+		RecipeCategoryInSchema,
+		AllergyOutSchema,
+		RecipeUpdateInSchema
+	} from '$lib/api/private-client/types.gen';
 	import { ingredientsApiPrivateCreateIngredientMutation } from '$lib/api/private-client/@tanstack/svelte-query.gen';
 	import { ingredientsApiPrivateGetAllergies } from '$lib/api/private-client/sdk.gen';
 	import { createMutation } from '@tanstack/svelte-query';
@@ -20,11 +21,11 @@
 	import IngredientForm from '$lib/components/admin/ingredients/IngredientForm.svelte';
 
 	interface Props {
-		recipe?: RecipeOutSchema;
-		onSave: (recipe: Partial<RecipeOutSchema>) => void;
+		recipe?: PrivateRecipeOutSchema;
+		onSave: (recipe: RecipeUpdateInSchema) => void;
 		onCancel: () => void;
 		availableIngredients?: IngredientOutSchema[];
-		availableCategories?: RecipeCategoryOutSchema[];
+		availableCategories?: RecipeCategoryInSchema[];
 	}
 
 	let {
@@ -80,29 +81,50 @@
 	};
 
 	function handleCreateIngredient(payload: IngredientFormPayload) {
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		createIngredientMutation.mutate({
-			body: payload as any
+			body: payload
 		});
 	}
 
 	// Steps state
-	let steps = $state<Array<RecipeStepOutSchema & { tempId?: string }>>(
+	let steps = $state<Array<PrivateRecipeStepOutSchema & { tempId?: string }>>(
 		recipe?.steps?.map((s, i) => ({ ...s, order: i })) || []
 	);
 
 	// Ingredients state
-	let ingredients = $state<
-		Array<RecipeIngredientOutSchema & { tempId?: string }>
-	>(recipe?.ingredients?.map((ing) => ({
-		...ing,
-		ingredient_alternatives: ing.ingredient_alternatives || []
-	})) || []);
+	let ingredients = $state<Array<PrivateRecipeIngredientOutSchema & { tempId?: string }>>(
+		recipe?.ingredients?.map((ing) => ({
+			...ing,
+			ingredient_alternatives: ing.ingredient_alternatives || []
+		})) || []
+	);
 
 	// Notes state
-	let notes = $state<Array<RecipeNoteOutSchema & { tempId?: string }>>(
+	let notes = $state<Array<PrivateRecipeNoteOutSchema & { tempId?: string }>>(
 		recipe?.notes?.map((n, i) => ({ ...n, order: i })) || []
 	);
+
+	$effect(() => {
+		if (!recipe) {
+			return;
+		}
+
+		name = recipe.name;
+		short_description = recipe.short_description ?? '';
+		selectedCategorySqid = recipe.category?.sqid ?? '';
+		steps = (recipe.steps ?? []).map((step, index) => ({
+			...step,
+			order: index
+		}));
+		ingredients = (recipe.ingredients ?? []).map((ingredient) => ({
+			...ingredient,
+			ingredient_alternatives: ingredient.ingredient_alternatives ?? []
+		}));
+		notes = (recipe.notes ?? []).map((note, index) => ({
+			...note,
+			order: index
+		}));
+	});
 
 	// Drag state
 	let draggedStepIndex = $state<number | null>(null);
@@ -147,9 +169,13 @@
 		draggedStepIndex = null;
 	}
 
+	function handleStepDragStart(index: number) {
+		draggedStepIndex = index;
+	}
+
 	// Ingredient management
 	function addIngredient() {
-		const newIngredient: RecipeIngredientOutSchema & { tempId?: string } = {
+		const newIngredient: PrivateRecipeIngredientOutSchema & { tempId?: string } = {
 			sqid: `temp-${Date.now()}`,
 			tempId: `temp-${Date.now()}`,
 			quantity: 0,
@@ -199,7 +225,7 @@
 
 	// Note management
 	function addNote() {
-		const newNote: RecipeNoteOutSchema & { tempId?: string } = {
+		const newNote: PrivateRecipeNoteOutSchema & { tempId?: string } = {
 			sqid: `temp-${Date.now()}`,
 			tempId: `temp-${Date.now()}`,
 			order: notes.length,
@@ -211,36 +237,49 @@
 
 	// Form submission
 	function handleSubmit() {
-		const selectedCategory = availableCategories.find(
-			(c) => c.sqid === selectedCategorySqid
-		);
+		const selectedCategory = availableCategories.find((c) => c.sqid === selectedCategorySqid);
 
-		const recipeData: Partial<RecipeOutSchema> = {
-			...(recipe?.sqid && { sqid: recipe.sqid }),
+		const recipeData: RecipeUpdateInSchema = {
 			name,
 			short_description: short_description || null,
-			category: selectedCategory!,
+			category: selectedCategory ?? { sqid: selectedCategorySqid, name: null },
 			steps: steps.map((s, i) => ({
-				sqid: s.tempId ? '' : s.sqid,
+				sqid: s.tempId ? null : s.sqid,
 				order: i,
 				instruction: s.instruction
 			})),
 			ingredients: ingredients
 				.filter((ing) => ing.ingredient.sqid)
 				.map((ing) => ({
-					sqid: ing.tempId ? '' : ing.sqid,
+					sqid: ing.tempId ? null : ing.sqid,
 					quantity: ing.quantity,
-					unit: ing.unit,
-					ingredient: ing.ingredient,
-					ingredient_alternatives: ing.ingredient_alternatives
+					unit: ing.unit ?? null,
+					ingredient: {
+						sqid: ing.ingredient.sqid,
+						name_singular: ing.ingredient.name_singular,
+						name_plural: ing.ingredient.name_plural
+					},
+					ingredient_alternatives: (ing.ingredient_alternatives ?? [])
+						.filter((alt) => alt.alternative_ingredient.sqid)
+						.map((alt) => ({
+							sqid: alt.sqid.startsWith('temp-') ? null : alt.sqid,
+							for_allergies: (alt.for_allergies ?? []).map((allergy) => ({ sqid: allergy.sqid })),
+							alternative_ingredient: {
+								sqid: alt.alternative_ingredient.sqid,
+								name_singular: alt.alternative_ingredient.name_singular,
+								name_plural: alt.alternative_ingredient.name_plural
+							},
+							quantity: alt.quantity,
+							unit: alt.unit ?? null
+						}))
 				})),
 			notes: notes
 				.filter((n) => n.note.trim())
 				.map((n, i) => ({
-					sqid: n.tempId ? '' : n.sqid,
+					sqid: n.tempId ? undefined : n.sqid,
 					order: i,
 					note: n.note,
-					type: n.type
+					type: n.type ?? 'info'
 				}))
 		};
 
@@ -251,13 +290,16 @@
 <div class="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-lg">
 	<h2 class="text-2xl font-bold mb-6">{recipe ? 'Recept bewerken' : 'Nieuw recept'}</h2>
 
-	<form onsubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
+	<form
+		onsubmit={(e) => {
+			e.preventDefault();
+			handleSubmit();
+		}}
+	>
 		<!-- Basic Info -->
 		<div class="space-y-4 mb-6">
 			<div>
-				<label for="name" class="block text-sm font-medium text-gray-700 mb-1"
-					>Naam *</label
-				>
+				<label for="name" class="block text-sm font-medium text-gray-700 mb-1">Naam *</label>
 				<input
 					id="name"
 					type="text"
@@ -267,16 +309,16 @@
 				/>
 			</div>
 
-		<div>
-			<label for="category" class="block text-sm font-medium text-gray-700 mb-1"
-				>Categorie *</label
-			>
-			<CategorySelect
-				categories={availableCategories}
-				selected={selectedCategorySqid}
-				onSelect={(sqid) => (selectedCategorySqid = sqid)}
-			/>
-		</div>
+			<div>
+				<label for="category" class="block text-sm font-medium text-gray-700 mb-1"
+					>Categorie *</label
+				>
+				<CategorySelect
+					categories={availableCategories}
+					selected={selectedCategorySqid}
+					onSelect={(sqid) => (selectedCategorySqid = sqid)}
+				/>
+			</div>
 
 			<div>
 				<label for="short_description" class="block text-sm font-medium text-gray-700 mb-1"
@@ -347,7 +389,7 @@
 
 							<div class="w-32">
 								<UnitSelect
-									selected={ingredient.unit}
+									selected={ingredient.unit ?? null}
 									onSelect={(unit) => {
 										ingredient.unit = unit;
 									}}
@@ -499,7 +541,7 @@
 			<h3 class="text-lg font-semibold mb-3">Notities</h3>
 
 			<DraggableList items={notes} onReorder={(reordered) => (notes = reordered)}>
-				{#snippet children(note: RecipeNoteOutSchema & { tempId?: string })}
+				{#snippet children(note: PrivateRecipeNoteOutSchema & { tempId?: string })}
 					<div class="space-y-2">
 						<div class="flex gap-2 items-center">
 							<select
@@ -549,10 +591,7 @@
 			>
 				Annuleren
 			</button>
-			<button
-				type="submit"
-				class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-			>
+			<button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
 				Opslaan
 			</button>
 		</div>

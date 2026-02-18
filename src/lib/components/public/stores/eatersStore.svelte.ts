@@ -1,5 +1,5 @@
 import "@macfja/svelte-persistent-runes"
-import type { AllergyOutSchema } from "../../client/types.gen";
+import type { AllergyOutSchema } from "$lib/api/public-client/types.gen";
 
 interface AllergyCountMap {
     [allergyName: string]: number;

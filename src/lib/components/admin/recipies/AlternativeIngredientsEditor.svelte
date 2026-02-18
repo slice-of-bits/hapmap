@@ -1,23 +1,25 @@
 <script lang="ts">
 	import type {
-		AlternativeOutSchema,
+		PrivateRecipeIngredientAltForAllergyOutSchema,
 		IngredientOutSchema,
 		AllergyOutSchema
-	} from '$lib/api/public-client/types.gen';
+	} from '$lib/api/private-client/types.gen';
 	import FuzzyIngredientSearch from './FuzzyIngredientSearch.svelte';
 	import UnitSelect from './UnitSelect.svelte';
 
 	interface Props {
-		alternatives: Array<AlternativeOutSchema & { tempId?: string }>;
+		alternatives: Array<PrivateRecipeIngredientAltForAllergyOutSchema & { tempId?: string }>;
 		availableIngredients: IngredientOutSchema[];
 		availableAllergies: AllergyOutSchema[];
-		onUpdate: (alternatives: Array<AlternativeOutSchema & { tempId?: string }>) => void;
+		onUpdate: (
+			alternatives: Array<PrivateRecipeIngredientAltForAllergyOutSchema & { tempId?: string }>
+		) => void;
 	}
 
 	let { alternatives, availableIngredients, availableAllergies, onUpdate }: Props = $props();
 
 	function addAlternative() {
-		const newAlt: AlternativeOutSchema & { tempId?: string } = {
+		const newAlt: PrivateRecipeIngredientAltForAllergyOutSchema & { tempId?: string } = {
 			sqid: `temp-${Date.now()}`,
 			tempId: `temp-${Date.now()}`,
 			quantity: 0,
