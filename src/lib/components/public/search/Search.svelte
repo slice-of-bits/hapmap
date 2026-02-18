@@ -238,7 +238,7 @@
 	<div class="flex items-center gap-2">
 		<div class="relative min-w-0 flex-1">
 			<input
-				class={`block w-full max-w-full min-w-0 rounded border border-slate-300 bg-white pr-9 placeholder:font-medium placeholder:text-slate-500 focus:border-emerald-600 focus:ring-emerald-600 ${inputClasses}`}
+				class={`block w-full max-w-full min-w-0 rounded border border-slate-300 bg-white pr-9 text-black placeholder:font-medium placeholder:text-slate-500 focus:border-emerald-600 focus:ring-emerald-600 ${inputClasses}`}
 				bind:value={query}
 				bind:this={searchInput}
 				{autofocus}

@@ -29,19 +29,21 @@
 					{recipe.short_description}
 				</span>
 				<div class="flex gap-2">
-					<span>Bevat allergie:</span>
+					{#if recipe.includes_allergies.length > 0}
+						<span>Bevat allergie:</span>
+					{/if}
 					{#each recipe.includes_allergies ?? [] as allergy}
 						<span class="bg-blue-200 text-blue-800 text-xs font-semibold px-1 py-0.5 rounded">
 							{allergy.name}
 						</span>
 					{/each}
 				</div>
-				<hr class="border-gray-400 my-2" />
-				<div class="flex gap-2 justify-between">
+				<hr class="border-gray-400 my-1" />
+				<div class="flex gap-2 justify-between text-sm">
 					<span>Gemaakt op: {new Date(recipe.created_at).toLocaleDateString()}</span>
 					<span
-						>Van: <a href={`/gebruikers/${recipe.created_by.username}`}
-							>{recipe.created_by.username}</a
+						>Van: <a href={`/gebruikers/${recipe.created_by.title}`}
+							>{recipe.created_by.title}</a
 						></span
 					>
 				</div>
