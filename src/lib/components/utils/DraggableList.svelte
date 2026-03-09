@@ -10,7 +10,7 @@
 	let draggedIndex = $state<number | null>(null);
 
 	// Helper function to move array items
-	function arrayMove(arr: ItemType[], from: number, to: number): ItemType[] {
+	function arrayMove(arr: T[], from: number, to: number): T[] {
 		const newArr = [...arr];
 		const item = newArr.splice(from, 1)[0];
 		newArr.splice(to, 0, item);
@@ -68,7 +68,7 @@
 					draggable="true"
 					ondragstart={() => handleDragStart(index)}
 					ondragend={handleDragEnd}
-					class="cursor-move px-2 py-1 text-gray-500 hover:text-gray-700 flex-shrink-0"
+					class="cursor-move px-2 py-1 text-gray-500 hover:text-gray-700 shrink-0"
 					title="Sleep om te verplaatsen"
 				>
 					☰
@@ -78,7 +78,7 @@
 					{@render children(item, index)}
 				</div>
 
-				<div class="flex flex-col gap-1 flex-shrink-0">
+				<div class="flex flex-col gap-1 shrink-0">
 					<button
 						type="button"
 						onclick={() => moveUp(index)}

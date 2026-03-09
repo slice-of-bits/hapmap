@@ -366,21 +366,25 @@ export type IngredientOutSchema = {
     name_plural: string;
 };
 
-export type RecipesApiPrivateListPrivateRecipesData = {
+export type RecipesApiPrivateListRecipesData = {
     body?: never;
     path?: never;
     query?: never;
     url: '/private/recipes/recipes/';
 };
 
-export type RecipesApiPrivateListPrivateRecipesResponses = {
+export type RecipesApiPrivateListRecipesResponses = {
     /**
+     * Response
+     *
      * OK
      */
-    200: unknown;
+    200: Array<PrivateRecipeOutSchema>;
 };
 
-export type RecipesApiPrivateCreatePrivateRecipeData = {
+export type RecipesApiPrivateListRecipesResponse = RecipesApiPrivateListRecipesResponses[keyof RecipesApiPrivateListRecipesResponses];
+
+export type RecipesApiPrivateCreateRecipeData = {
     body?: never;
     path?: never;
     query: {
@@ -394,14 +398,14 @@ export type RecipesApiPrivateCreatePrivateRecipeData = {
     url: '/private/recipes/recipes/';
 };
 
-export type RecipesApiPrivateCreatePrivateRecipeResponses = {
+export type RecipesApiPrivateCreateRecipeResponses = {
     /**
      * OK
      */
     200: unknown;
 };
 
-export type RecipesApiPrivateDeletePrivateRecipeData = {
+export type RecipesApiPrivateDeleteRecipeData = {
     body?: never;
     path: {
         /**
@@ -413,14 +417,14 @@ export type RecipesApiPrivateDeletePrivateRecipeData = {
     url: '/private/recipes/recipes/{sqid}/';
 };
 
-export type RecipesApiPrivateDeletePrivateRecipeResponses = {
+export type RecipesApiPrivateDeleteRecipeResponses = {
     /**
      * OK
      */
     200: unknown;
 };
 
-export type RecipesApiPrivateGetPrivateRecipeDetailData = {
+export type RecipesApiPrivateGetRecipeDetailData = {
     body?: never;
     path: {
         /**
@@ -432,16 +436,16 @@ export type RecipesApiPrivateGetPrivateRecipeDetailData = {
     url: '/private/recipes/recipes/{sqid}/';
 };
 
-export type RecipesApiPrivateGetPrivateRecipeDetailResponses = {
+export type RecipesApiPrivateGetRecipeDetailResponses = {
     /**
      * OK
      */
     200: PrivateRecipeOutSchema;
 };
 
-export type RecipesApiPrivateGetPrivateRecipeDetailResponse = RecipesApiPrivateGetPrivateRecipeDetailResponses[keyof RecipesApiPrivateGetPrivateRecipeDetailResponses];
+export type RecipesApiPrivateGetRecipeDetailResponse = RecipesApiPrivateGetRecipeDetailResponses[keyof RecipesApiPrivateGetRecipeDetailResponses];
 
-export type RecipesApiPrivateUpdatePrivateRecipeData = {
+export type RecipesApiPrivateUpdateRecipeData = {
     body: RecipeUpdateInSchema;
     path: {
         /**
@@ -453,14 +457,14 @@ export type RecipesApiPrivateUpdatePrivateRecipeData = {
     url: '/private/recipes/recipes/{sqid}/';
 };
 
-export type RecipesApiPrivateUpdatePrivateRecipeResponses = {
+export type RecipesApiPrivateUpdateRecipeResponses = {
     /**
      * OK
      */
     200: PrivateRecipeOutSchema;
 };
 
-export type RecipesApiPrivateUpdatePrivateRecipeResponse = RecipesApiPrivateUpdatePrivateRecipeResponses[keyof RecipesApiPrivateUpdatePrivateRecipeResponses];
+export type RecipesApiPrivateUpdateRecipeResponse = RecipesApiPrivateUpdateRecipeResponses[keyof RecipesApiPrivateUpdateRecipeResponses];
 
 export type IngredientsApiPrivateGetIngredientsData = {
     body?: never;

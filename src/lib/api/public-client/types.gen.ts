@@ -41,6 +41,20 @@ export type IngredientOutSchema = {
 };
 
 /**
+ * Input
+ */
+export type Input = {
+    /**
+     * Limit
+     */
+    limit?: number;
+    /**
+     * Offset
+     */
+    offset?: number;
+};
+
+/**
  * RecipeFilterSchema
  */
 export type RecipeFilterSchema = {
@@ -49,9 +63,41 @@ export type RecipeFilterSchema = {
      */
     name?: string | null;
     /**
+     * Categorie
+     */
+    categorie?: string | null;
+    /**
+     * Category
+     */
+    category?: string | null;
+    /**
      * Created By
      */
     created_by?: string | null;
+    /**
+     * Include Ingredients
+     */
+    include_ingredients?: Array<string> | null;
+    /**
+     * Exclude Ingredients
+     */
+    exclude_ingredients?: Array<string> | null;
+    /**
+     * Include Ingredient
+     */
+    include_ingredient?: string | null;
+    /**
+     * Exclude Ingredient
+     */
+    exclude_ingredient?: string | null;
+    /**
+     * Include Allergy
+     */
+    include_allergy?: string | null;
+    /**
+     * Exclude Allergy
+     */
+    exclude_allergy?: string | null;
 };
 
 /**
@@ -86,6 +132,20 @@ export type CreatorProfileOutSchema = {
      * Url
      */
     url?: string | null;
+};
+
+/**
+ * PagedRecipeListOutSchema
+ */
+export type PagedRecipeListOutSchema = {
+    /**
+     * Items
+     */
+    items: Array<RecipeListOutSchema>;
+    /**
+     * Count
+     */
+    count: number;
 };
 
 /**
@@ -318,20 +378,58 @@ export type RecipesApiPublicGetRecipesData = {
          */
         name?: string | null;
         /**
+         * Categorie
+         */
+        categorie?: string | null;
+        /**
+         * Category
+         */
+        category?: string | null;
+        /**
          * Created By
          */
         created_by?: string | null;
+        /**
+         * Include Ingredients
+         */
+        include_ingredients?: Array<string> | null;
+        /**
+         * Exclude Ingredients
+         */
+        exclude_ingredients?: Array<string> | null;
+        /**
+         * Include Ingredient
+         */
+        include_ingredient?: string | null;
+        /**
+         * Exclude Ingredient
+         */
+        exclude_ingredient?: string | null;
+        /**
+         * Include Allergy
+         */
+        include_allergy?: string | null;
+        /**
+         * Exclude Allergy
+         */
+        exclude_allergy?: string | null;
+        /**
+         * Limit
+         */
+        limit?: number;
+        /**
+         * Offset
+         */
+        offset?: number;
     };
     url: '/recipes/';
 };
 
 export type RecipesApiPublicGetRecipesResponses = {
     /**
-     * Response
-     *
      * OK
      */
-    200: Array<RecipeListOutSchema>;
+    200: PagedRecipeListOutSchema;
 };
 
 export type RecipesApiPublicGetRecipesResponse = RecipesApiPublicGetRecipesResponses[keyof RecipesApiPublicGetRecipesResponses];
@@ -344,6 +442,46 @@ export type RecipesApiPublicSearchRecipesData = {
          * Query
          */
         query: string;
+        /**
+         * Name
+         */
+        name?: string | null;
+        /**
+         * Categorie
+         */
+        categorie?: string | null;
+        /**
+         * Category
+         */
+        category?: string | null;
+        /**
+         * Created By
+         */
+        created_by?: string | null;
+        /**
+         * Include Ingredients
+         */
+        include_ingredients?: Array<string> | null;
+        /**
+         * Exclude Ingredients
+         */
+        exclude_ingredients?: Array<string> | null;
+        /**
+         * Include Ingredient
+         */
+        include_ingredient?: string | null;
+        /**
+         * Exclude Ingredient
+         */
+        exclude_ingredient?: string | null;
+        /**
+         * Include Allergy
+         */
+        include_allergy?: string | null;
+        /**
+         * Exclude Allergy
+         */
+        exclude_allergy?: string | null;
     };
     url: '/recipes/search/';
 };

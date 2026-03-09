@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { createQuery } from '@tanstack/svelte-query';
-	import { recipesApiPublicGetRecipesOptions } from '$lib/api/public-client/@tanstack/svelte-query.gen';
-	import type { RecipeListOutSchema } from '$lib/api/public-client/types.gen';
+	import { recipesApiPrivateListRecipesOptions } from '$lib/api/private-client/@tanstack/svelte-query.gen';
+	import type { PrivateRecipeOutSchema } from '$lib/api/private-client/types.gen';
 
 	interface Props {
 		onDelete: (sqid: string) => void;
@@ -10,14 +10,14 @@
 	let { onDelete }: Props = $props();
 
 	const recipesQuery = createQuery(() => ({
-		...recipesApiPublicGetRecipesOptions({})
+		...recipesApiPrivateListRecipesOptions({})
 	}));
 
 	let recipes = $derived(recipesQuery.data || []);
 	let isLoading = $derived(recipesQuery.isLoading);
 	let error = $derived(recipesQuery.error);
 
-	function handleDelete(recipe: RecipeListOutSchema) {
+	function handleDelete(recipe: PrivateRecipeOutSchema) {
 		if (confirm(`Weet je zeker dat je "${recipe.name}" wilt verwijderen?`)) {
 			onDelete(recipe.sqid);
 		}

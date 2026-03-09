@@ -1,20 +1,25 @@
 <script lang="ts">
 	import Select from 'svelte-select';
-	import type { RecipeCategoryOutSchema } from '$lib/api/public-client/types.gen';
+	import type { RecipeCategoryInSchema } from '$lib/api/private-client/types.gen';
 
 	interface Props {
-		categories: RecipeCategoryOutSchema[];
+		categories: RecipeCategoryInSchema[];
 		selected: string;
 		onSelect: (sqid: string) => void;
 		placeholder?: string;
 	}
 
-	let { categories, selected, onSelect, placeholder = 'Selecteer een categorie...' }: Props = $props();
+	let {
+		categories,
+		selected,
+		onSelect,
+		placeholder = 'Selecteer een categorie...'
+	}: Props = $props();
 
 	// Create items array for svelte-select
 	let items = $derived(
 		categories.map((category) => ({
-			label: category.name,
+			label: category.name ?? category.sqid,
 			value: category.sqid
 		}))
 	);

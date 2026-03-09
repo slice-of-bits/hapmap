@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { IngredientsApiPrivateCreateIngredientData, IngredientsApiPrivateCreateIngredientResponses, IngredientsApiPrivateGetAllergiesData, IngredientsApiPrivateGetAllergiesResponses, IngredientsApiPrivateGetIngredientDetailData, IngredientsApiPrivateGetIngredientDetailResponses, IngredientsApiPrivateGetIngredientsData, IngredientsApiPrivateGetIngredientsResponses, IngredientsApiPrivateUpdateIngredientData, IngredientsApiPrivateUpdateIngredientResponses, RecipesApiPrivateCreatePrivateRecipeData, RecipesApiPrivateCreatePrivateRecipeResponses, RecipesApiPrivateDeletePrivateRecipeData, RecipesApiPrivateDeletePrivateRecipeResponses, RecipesApiPrivateGetPrivateRecipeDetailData, RecipesApiPrivateGetPrivateRecipeDetailResponses, RecipesApiPrivateListPrivateRecipesData, RecipesApiPrivateListPrivateRecipesResponses, RecipesApiPrivateUpdatePrivateRecipeData, RecipesApiPrivateUpdatePrivateRecipeResponses } from './types.gen';
+import type { IngredientsApiPrivateCreateIngredientData, IngredientsApiPrivateCreateIngredientResponses, IngredientsApiPrivateGetAllergiesData, IngredientsApiPrivateGetAllergiesResponses, IngredientsApiPrivateGetIngredientDetailData, IngredientsApiPrivateGetIngredientDetailResponses, IngredientsApiPrivateGetIngredientsData, IngredientsApiPrivateGetIngredientsResponses, IngredientsApiPrivateUpdateIngredientData, IngredientsApiPrivateUpdateIngredientResponses, RecipesApiPrivateCreateRecipeData, RecipesApiPrivateCreateRecipeResponses, RecipesApiPrivateDeleteRecipeData, RecipesApiPrivateDeleteRecipeResponses, RecipesApiPrivateGetRecipeDetailData, RecipesApiPrivateGetRecipeDetailResponses, RecipesApiPrivateListRecipesData, RecipesApiPrivateListRecipesResponses, RecipesApiPrivateUpdateRecipeData, RecipesApiPrivateUpdateRecipeResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -19,18 +19,18 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
 };
 
 /**
- * List Private Recipes
+ * List Recipes
  */
-export const recipesApiPrivateListPrivateRecipes = <ThrowOnError extends boolean = false>(options?: Options<RecipesApiPrivateListPrivateRecipesData, ThrowOnError>) => (options?.client ?? client).get<RecipesApiPrivateListPrivateRecipesResponses, unknown, ThrowOnError>({
+export const recipesApiPrivateListRecipes = <ThrowOnError extends boolean = false>(options?: Options<RecipesApiPrivateListRecipesData, ThrowOnError>) => (options?.client ?? client).get<RecipesApiPrivateListRecipesResponses, unknown, ThrowOnError>({
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/private/recipes/recipes/',
     ...options
 });
 
 /**
- * Create Private Recipe
+ * Create Recipe
  */
-export const recipesApiPrivateCreatePrivateRecipe = <ThrowOnError extends boolean = false>(options: Options<RecipesApiPrivateCreatePrivateRecipeData, ThrowOnError>) => (options.client ?? client).post<RecipesApiPrivateCreatePrivateRecipeResponses, unknown, ThrowOnError>({
+export const recipesApiPrivateCreateRecipe = <ThrowOnError extends boolean = false>(options: Options<RecipesApiPrivateCreateRecipeData, ThrowOnError>) => (options.client ?? client).post<RecipesApiPrivateCreateRecipeResponses, unknown, ThrowOnError>({
     querySerializer: { parameters: { recipe_data: { object: { style: 'form' } } } },
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/private/recipes/recipes/',
@@ -38,27 +38,27 @@ export const recipesApiPrivateCreatePrivateRecipe = <ThrowOnError extends boolea
 });
 
 /**
- * Delete Private Recipe
+ * Delete Recipe
  */
-export const recipesApiPrivateDeletePrivateRecipe = <ThrowOnError extends boolean = false>(options: Options<RecipesApiPrivateDeletePrivateRecipeData, ThrowOnError>) => (options.client ?? client).delete<RecipesApiPrivateDeletePrivateRecipeResponses, unknown, ThrowOnError>({
+export const recipesApiPrivateDeleteRecipe = <ThrowOnError extends boolean = false>(options: Options<RecipesApiPrivateDeleteRecipeData, ThrowOnError>) => (options.client ?? client).delete<RecipesApiPrivateDeleteRecipeResponses, unknown, ThrowOnError>({
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/private/recipes/recipes/{sqid}/',
     ...options
 });
 
 /**
- * Get Private Recipe Detail
+ * Get Recipe Detail
  */
-export const recipesApiPrivateGetPrivateRecipeDetail = <ThrowOnError extends boolean = false>(options: Options<RecipesApiPrivateGetPrivateRecipeDetailData, ThrowOnError>) => (options.client ?? client).get<RecipesApiPrivateGetPrivateRecipeDetailResponses, unknown, ThrowOnError>({
+export const recipesApiPrivateGetRecipeDetail = <ThrowOnError extends boolean = false>(options: Options<RecipesApiPrivateGetRecipeDetailData, ThrowOnError>) => (options.client ?? client).get<RecipesApiPrivateGetRecipeDetailResponses, unknown, ThrowOnError>({
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/private/recipes/recipes/{sqid}/',
     ...options
 });
 
 /**
- * Update Private Recipe
+ * Update Recipe
  */
-export const recipesApiPrivateUpdatePrivateRecipe = <ThrowOnError extends boolean = false>(options: Options<RecipesApiPrivateUpdatePrivateRecipeData, ThrowOnError>) => (options.client ?? client).put<RecipesApiPrivateUpdatePrivateRecipeResponses, unknown, ThrowOnError>({
+export const recipesApiPrivateUpdateRecipe = <ThrowOnError extends boolean = false>(options: Options<RecipesApiPrivateUpdateRecipeData, ThrowOnError>) => (options.client ?? client).put<RecipesApiPrivateUpdateRecipeResponses, unknown, ThrowOnError>({
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/private/recipes/recipes/{sqid}/',
     ...options,

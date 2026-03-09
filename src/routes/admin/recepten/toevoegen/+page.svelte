@@ -2,16 +2,19 @@
 	import { createMutation, useQueryClient } from '@tanstack/svelte-query';
 	import { goto } from '$app/navigation';
 	import RecipeForm from '$lib/components/admin/recipies/RecipeForm.svelte';
-	import { recipesApiPrivateCreatePrivateRecipeMutation } from '$lib/api/private-client/@tanstack/svelte-query.gen';
-	import { ingredientsApiPublicGetIngredients, recipesApiPublicGetCategories } from '$lib/api/public-client/sdk.gen';
+	import { recipesApiPrivateCreateRecipeMutation } from '$lib/api/private-client/@tanstack/svelte-query.gen';
+	import {
+		ingredientsApiPrivateGetIngredients,
+		recipesApiPrivateListRecipes
+	} from '$lib/api/private-client/sdk.gen';
 	import type {
-		RecipeOutSchema,
+		RecipeUpdateInSchema,
 		IngredientOutSchema,
-		RecipeCategoryOutSchema
-	} from '$lib/api/public-client/types.gen';
+		RecipeCategoryInSchema
+	} from '$lib/api/private-client/types.gen';
 
 	let availableIngredients = $state<IngredientOutSchema[]>([]);
-	let availableCategories = $state<RecipeCategoryOutSchema[]>([]);
+	let availableCategories = $state<RecipeCategoryInSchema[]>([]);
 
 	const queryClient = useQueryClient();
 
@@ -23,9 +26,9 @@
 
 	async function loadIngredients() {
 		try {
-			const response = await ingredientsApiPublicGetIngredients();
+			const response = await ingredientsApiPrivateGetIngredients();
 			if (response.data && Array.isArray(response.data)) {
-				availableIngredients = response.data as IngredientOutSchema[];
+				availableIngredients = response.data;
 			}
 		} catch (error) {
 			console.error('Failed to load ingredients:', error);
@@ -34,9 +37,21 @@
 
 	async function loadCategories() {
 		try {
-			const response = await recipesApiPublicGetCategories();
+			const response = await recipesApiPrivateListRecipes();
 			if (response.data && Array.isArray(response.data)) {
-				availableCategories = response.data as RecipeCategoryOutSchema[];
+				const uniqueCategories = new Map<string, RecipeCategoryInSchema>();
+
+				for (const recipe of response.data) {
+					const category = recipe.category;
+					if (!uniqueCategories.has(category.sqid)) {
+						uniqueCategories.set(category.sqid, {
+							sqid: category.sqid,
+							name: category.name
+						});
+					}
+				}
+
+				availableCategories = Array.from(uniqueCategories.values());
 			}
 		} catch (error) {
 			console.error('Failed to load categories:', error);
@@ -44,15 +59,15 @@
 	}
 
 	const createMutationObj = createMutation(() => ({
-		...recipesApiPrivateCreatePrivateRecipeMutation(),
+		...recipesApiPrivateCreateRecipeMutation(),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['recipes'] });
 			goto('/admin/recepten');
 		}
 	}));
 
-	function handleSave(recipe: Partial<RecipeOutSchema>) {
-		createMutationObj.mutate({ body: recipe });
+	function handleSave(recipe: RecipeUpdateInSchema) {
+		createMutationObj.mutate({ query: { recipe_data: recipe as Record<string, unknown> } });
 	}
 
 	function handleCancel() {

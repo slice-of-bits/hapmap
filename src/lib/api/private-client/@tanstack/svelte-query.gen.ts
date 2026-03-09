@@ -3,8 +3,8 @@
 import { type DefaultError, type MutationOptions, queryOptions } from '@tanstack/svelte-query';
 
 import { client } from '../client.gen';
-import { ingredientsApiPrivateCreateIngredient, ingredientsApiPrivateGetAllergies, ingredientsApiPrivateGetIngredientDetail, ingredientsApiPrivateGetIngredients, ingredientsApiPrivateUpdateIngredient, type Options, recipesApiPrivateCreatePrivateRecipe, recipesApiPrivateDeletePrivateRecipe, recipesApiPrivateGetPrivateRecipeDetail, recipesApiPrivateListPrivateRecipes, recipesApiPrivateUpdatePrivateRecipe } from '../sdk.gen';
-import type { IngredientsApiPrivateCreateIngredientData, IngredientsApiPrivateCreateIngredientResponse, IngredientsApiPrivateGetAllergiesData, IngredientsApiPrivateGetAllergiesResponse, IngredientsApiPrivateGetIngredientDetailData, IngredientsApiPrivateGetIngredientDetailResponse, IngredientsApiPrivateGetIngredientsData, IngredientsApiPrivateGetIngredientsResponse, IngredientsApiPrivateUpdateIngredientData, IngredientsApiPrivateUpdateIngredientResponse, RecipesApiPrivateCreatePrivateRecipeData, RecipesApiPrivateDeletePrivateRecipeData, RecipesApiPrivateGetPrivateRecipeDetailData, RecipesApiPrivateGetPrivateRecipeDetailResponse, RecipesApiPrivateListPrivateRecipesData, RecipesApiPrivateUpdatePrivateRecipeData, RecipesApiPrivateUpdatePrivateRecipeResponse } from '../types.gen';
+import { ingredientsApiPrivateCreateIngredient, ingredientsApiPrivateGetAllergies, ingredientsApiPrivateGetIngredientDetail, ingredientsApiPrivateGetIngredients, ingredientsApiPrivateUpdateIngredient, type Options, recipesApiPrivateCreateRecipe, recipesApiPrivateDeleteRecipe, recipesApiPrivateGetRecipeDetail, recipesApiPrivateListRecipes, recipesApiPrivateUpdateRecipe } from '../sdk.gen';
+import type { IngredientsApiPrivateCreateIngredientData, IngredientsApiPrivateCreateIngredientResponse, IngredientsApiPrivateGetAllergiesData, IngredientsApiPrivateGetAllergiesResponse, IngredientsApiPrivateGetIngredientDetailData, IngredientsApiPrivateGetIngredientDetailResponse, IngredientsApiPrivateGetIngredientsData, IngredientsApiPrivateGetIngredientsResponse, IngredientsApiPrivateUpdateIngredientData, IngredientsApiPrivateUpdateIngredientResponse, RecipesApiPrivateCreateRecipeData, RecipesApiPrivateDeleteRecipeData, RecipesApiPrivateGetRecipeDetailData, RecipesApiPrivateGetRecipeDetailResponse, RecipesApiPrivateListRecipesData, RecipesApiPrivateListRecipesResponse, RecipesApiPrivateUpdateRecipeData, RecipesApiPrivateUpdateRecipeResponse } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
@@ -39,14 +39,14 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
     return [params];
 };
 
-export const recipesApiPrivateListPrivateRecipesQueryKey = (options?: Options<RecipesApiPrivateListPrivateRecipesData>) => createQueryKey('recipesApiPrivateListPrivateRecipes', options);
+export const recipesApiPrivateListRecipesQueryKey = (options?: Options<RecipesApiPrivateListRecipesData>) => createQueryKey('recipesApiPrivateListRecipes', options);
 
 /**
- * List Private Recipes
+ * List Recipes
  */
-export const recipesApiPrivateListPrivateRecipesOptions = (options?: Options<RecipesApiPrivateListPrivateRecipesData>) => queryOptions<unknown, DefaultError, unknown, ReturnType<typeof recipesApiPrivateListPrivateRecipesQueryKey>>({
+export const recipesApiPrivateListRecipesOptions = (options?: Options<RecipesApiPrivateListRecipesData>) => queryOptions<RecipesApiPrivateListRecipesResponse, DefaultError, RecipesApiPrivateListRecipesResponse, ReturnType<typeof recipesApiPrivateListRecipesQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
-        const { data } = await recipesApiPrivateListPrivateRecipes({
+        const { data } = await recipesApiPrivateListRecipes({
             ...options,
             ...queryKey[0],
             signal,
@@ -54,16 +54,16 @@ export const recipesApiPrivateListPrivateRecipesOptions = (options?: Options<Rec
         });
         return data;
     },
-    queryKey: recipesApiPrivateListPrivateRecipesQueryKey(options)
+    queryKey: recipesApiPrivateListRecipesQueryKey(options)
 });
 
 /**
- * Create Private Recipe
+ * Create Recipe
  */
-export const recipesApiPrivateCreatePrivateRecipeMutation = (options?: Partial<Options<RecipesApiPrivateCreatePrivateRecipeData>>): MutationOptions<unknown, DefaultError, Options<RecipesApiPrivateCreatePrivateRecipeData>> => {
-    const mutationOptions: MutationOptions<unknown, DefaultError, Options<RecipesApiPrivateCreatePrivateRecipeData>> = {
+export const recipesApiPrivateCreateRecipeMutation = (options?: Partial<Options<RecipesApiPrivateCreateRecipeData>>): MutationOptions<unknown, DefaultError, Options<RecipesApiPrivateCreateRecipeData>> => {
+    const mutationOptions: MutationOptions<unknown, DefaultError, Options<RecipesApiPrivateCreateRecipeData>> = {
         mutationFn: async (fnOptions) => {
-            const { data } = await recipesApiPrivateCreatePrivateRecipe({
+            const { data } = await recipesApiPrivateCreateRecipe({
                 ...options,
                 ...fnOptions,
                 throwOnError: true
@@ -75,12 +75,12 @@ export const recipesApiPrivateCreatePrivateRecipeMutation = (options?: Partial<O
 };
 
 /**
- * Delete Private Recipe
+ * Delete Recipe
  */
-export const recipesApiPrivateDeletePrivateRecipeMutation = (options?: Partial<Options<RecipesApiPrivateDeletePrivateRecipeData>>): MutationOptions<unknown, DefaultError, Options<RecipesApiPrivateDeletePrivateRecipeData>> => {
-    const mutationOptions: MutationOptions<unknown, DefaultError, Options<RecipesApiPrivateDeletePrivateRecipeData>> = {
+export const recipesApiPrivateDeleteRecipeMutation = (options?: Partial<Options<RecipesApiPrivateDeleteRecipeData>>): MutationOptions<unknown, DefaultError, Options<RecipesApiPrivateDeleteRecipeData>> => {
+    const mutationOptions: MutationOptions<unknown, DefaultError, Options<RecipesApiPrivateDeleteRecipeData>> = {
         mutationFn: async (fnOptions) => {
-            const { data } = await recipesApiPrivateDeletePrivateRecipe({
+            const { data } = await recipesApiPrivateDeleteRecipe({
                 ...options,
                 ...fnOptions,
                 throwOnError: true
@@ -91,14 +91,14 @@ export const recipesApiPrivateDeletePrivateRecipeMutation = (options?: Partial<O
     return mutationOptions;
 };
 
-export const recipesApiPrivateGetPrivateRecipeDetailQueryKey = (options: Options<RecipesApiPrivateGetPrivateRecipeDetailData>) => createQueryKey('recipesApiPrivateGetPrivateRecipeDetail', options);
+export const recipesApiPrivateGetRecipeDetailQueryKey = (options: Options<RecipesApiPrivateGetRecipeDetailData>) => createQueryKey('recipesApiPrivateGetRecipeDetail', options);
 
 /**
- * Get Private Recipe Detail
+ * Get Recipe Detail
  */
-export const recipesApiPrivateGetPrivateRecipeDetailOptions = (options: Options<RecipesApiPrivateGetPrivateRecipeDetailData>) => queryOptions<RecipesApiPrivateGetPrivateRecipeDetailResponse, DefaultError, RecipesApiPrivateGetPrivateRecipeDetailResponse, ReturnType<typeof recipesApiPrivateGetPrivateRecipeDetailQueryKey>>({
+export const recipesApiPrivateGetRecipeDetailOptions = (options: Options<RecipesApiPrivateGetRecipeDetailData>) => queryOptions<RecipesApiPrivateGetRecipeDetailResponse, DefaultError, RecipesApiPrivateGetRecipeDetailResponse, ReturnType<typeof recipesApiPrivateGetRecipeDetailQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
-        const { data } = await recipesApiPrivateGetPrivateRecipeDetail({
+        const { data } = await recipesApiPrivateGetRecipeDetail({
             ...options,
             ...queryKey[0],
             signal,
@@ -106,16 +106,16 @@ export const recipesApiPrivateGetPrivateRecipeDetailOptions = (options: Options<
         });
         return data;
     },
-    queryKey: recipesApiPrivateGetPrivateRecipeDetailQueryKey(options)
+    queryKey: recipesApiPrivateGetRecipeDetailQueryKey(options)
 });
 
 /**
- * Update Private Recipe
+ * Update Recipe
  */
-export const recipesApiPrivateUpdatePrivateRecipeMutation = (options?: Partial<Options<RecipesApiPrivateUpdatePrivateRecipeData>>): MutationOptions<RecipesApiPrivateUpdatePrivateRecipeResponse, DefaultError, Options<RecipesApiPrivateUpdatePrivateRecipeData>> => {
-    const mutationOptions: MutationOptions<RecipesApiPrivateUpdatePrivateRecipeResponse, DefaultError, Options<RecipesApiPrivateUpdatePrivateRecipeData>> = {
+export const recipesApiPrivateUpdateRecipeMutation = (options?: Partial<Options<RecipesApiPrivateUpdateRecipeData>>): MutationOptions<RecipesApiPrivateUpdateRecipeResponse, DefaultError, Options<RecipesApiPrivateUpdateRecipeData>> => {
+    const mutationOptions: MutationOptions<RecipesApiPrivateUpdateRecipeResponse, DefaultError, Options<RecipesApiPrivateUpdateRecipeData>> = {
         mutationFn: async (fnOptions) => {
-            const { data } = await recipesApiPrivateUpdatePrivateRecipe({
+            const { data } = await recipesApiPrivateUpdateRecipe({
                 ...options,
                 ...fnOptions,
                 throwOnError: true

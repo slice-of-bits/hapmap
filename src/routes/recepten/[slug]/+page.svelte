@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
 	import { createQuery } from '@tanstack/svelte-query';
 	import { recipesApiPublicGetRecipeDetailOptions } from '$lib/api/public-client/@tanstack/svelte-query.gen';
@@ -15,6 +16,7 @@
 		...recipesApiPublicGetRecipeDetailOptions({ path: { sqid: recipe_sqid } })
 	}));
 </script>
+
 <div class="max-w-3xl mx-auto p-4">
 	<h1 class="text-3xl font-bold mb-4 text-white text-center">
 		{#if recipeDetailQuery.isLoading}
@@ -25,21 +27,35 @@
 			{recipeDetailQuery.data.name}
 		{/if}
 	</h1>
-	<div class="mb-4 flex justify-between">
-		<h2 class="text-2xl font-semibold mb-2 text-white">Ingredienten</h2>
-		<h4 class="text-white align-text-bottom">Door:
-			{#if recipeDetailQuery.isLoading}
-				Recept aan het laden...
-			{:else if recipeDetailQuery.isError}
-				Fout bij het laden van het recept.
-			{:else if recipeDetailQuery.data}
-				{recipeDetailQuery.data.created_by.title} <img src={recipeDetailQuery.data.created_by.profile_icon}
-																											 alt="{recipeDetailQuery.data.created_by.title} profiel foto"
-																											 class="w-6 h-6 rounded-full inline-block ml-2" />
-			{/if}
-		</h4>
+	<div class="mb-4 flex flex-wrap items-start justify-between gap-4">
+		<div>
+			<h2 class="mb-2 text-2xl font-semibold text-white">Ingredienten</h2>
+			<h4 class="text-white align-text-bottom">
+				Door:
+				{#if recipeDetailQuery.isLoading}
+					Recept aan het laden...
+				{:else if recipeDetailQuery.isError}
+					Fout bij het laden van het recept.
+				{:else if recipeDetailQuery.data}
+					{recipeDetailQuery.data.created_by.title}
+					<img
+						src={recipeDetailQuery.data.created_by.profile_icon}
+						alt="{recipeDetailQuery.data.created_by.title} profiel foto"
+						class="w-6 h-6 rounded-full inline-block ml-2"
+					/>
+				{/if}
+			</h4>
+		</div>
+		<a
+			href={resolve(`/recepten/${slug}/print`)}
+			target="_blank"
+			rel="noopener noreferrer"
+			class="rounded border border-white px-3 py-2 text-sm font-medium text-white hover:bg-white hover:text-slate-800"
+		>
+			Print / PDF
+		</a>
 	</div>
-	<Ingredients recipe_sqid={recipe_sqid} />
+	<Ingredients {recipe_sqid} />
 	{#if recipeDetailQuery.data}
 		<Eaters allergies={recipeDetailQuery.data.includes_allergies} />
 	{/if}
@@ -60,10 +76,9 @@
 				Fout bij het laden van het recept.
 			{:else if recipeDetailQuery.data?.steps}
 				{#each recipeDetailQuery.data.steps as step, index (step.sqid)}
-					<RecipeStep step={step} index={index} />
+					<RecipeStep {step} {index} />
 				{/each}
 			{/if}
-
 		</div>
 	</div>
 </div>

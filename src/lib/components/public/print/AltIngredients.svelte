@@ -1,14 +1,18 @@
 <script lang="ts">
-  import AltIngredient from './AltIngredient.svelte';
-  import type { AlternativeOutSchema } from "$lib/api/public-client/types.gen";
+	import type { AlternativeOutSchema } from '$lib/api/public-client/types.gen';
+	import AltIngredient from './AltIngredient.svelte';
 
-  interface Props {
-    alt_ingredient: AlternativeOutSchema;
-  }
+	interface Props {
+		alternatives?: AlternativeOutSchema[];
+	}
 
-  let { alt_ingredient }: Props = $props();
+	let { alternatives = [] }: Props = $props();
 </script>
 
-<ul>
-  <AltIngredient {alt_ingredient} />
-</ul>
+{#if alternatives.length > 0}
+	<ul class="mt-1">
+		{#each alternatives as altIngredient (altIngredient.sqid)}
+			<AltIngredient {altIngredient} />
+		{/each}
+	</ul>
+{/if}

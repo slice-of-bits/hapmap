@@ -10,4 +10,6 @@ declare global {
 	}
 }
 
+declare module '@dopry/svelte-oidc';
+
 export {};

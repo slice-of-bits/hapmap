@@ -1,6 +1,6 @@
 <script lang="ts">
   import { eatersStore } from '../stores/eatersStore.svelte';
-  import type { AllergyOutSchema } from "$lib/client/types.gen";
+  import type { AllergyOutSchema } from "$lib/api/public-client/types.gen";
 
   interface Props {
     allergy: AllergyOutSchema;
