@@ -113,7 +113,7 @@
 	async function search(text: string) {
 		const currentRequestId = ++searchRequestId;
 
-		if (text.length < 2 && !hasActiveFilters) {
+		if (text.length < 1 && !hasActiveFilters) {
 			results = [];
 			selectedIndex = -1;
 			isSearching = false;
