@@ -1,17 +1,29 @@
-import '@macfja/svelte-persistent-runes'
+import '@macfja/svelte-persistent-runes';
+import { isStringArray, safePersistOptions } from '$lib/utils/persistentStorage';
 
-export const filtersVisibilityStore = $persist(false, 'filtersVisibility');
+export const filtersVisibilityStore = $persist(
+	false,
+	'filtersVisibility',
+	safePersistOptions(false, (value): value is boolean => typeof value === 'boolean')
+);
 
+export const activeFiltersStore = $persist<string[]>(
+	[],
+	'activeFilters',
+	safePersistOptions<string[]>([], isStringArray)
+);
 
-export const activeFiltersStore = $persist<string[]>([],'activeFilters');
+interface FilterObject {
+	filters: Record<string, string>;
+}
 
 export const buildFilterObject = () => {
-    const filterObject = { filters: {} };
+	const filterObject: FilterObject = { filters: {} };
 
-    activeFiltersStore.forEach((filter: string) => {
-        const [category, value] = filter.split('-');
-        (filterObject.filters as Record<string, any>)[category] = value;
-    });
+	activeFiltersStore.forEach((filter: string) => {
+		const [category, value] = filter.split('-');
+		filterObject.filters[category] = value;
+	});
 
-    return filterObject;
-}
+	return filterObject;
+};
