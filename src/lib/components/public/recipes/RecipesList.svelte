@@ -29,7 +29,7 @@
 					{recipe.short_description}
 				</span>
 				<div class="flex gap-2">
-					{#if recipe.includes_allergies.length > 0}
+					{#if recipe.includes_allergies?.length}
 						<span>Bevat allergie:</span>
 					{/if}
 					{#each recipe.includes_allergies ?? [] as allergy}

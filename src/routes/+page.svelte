@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { createQuery } from '@tanstack/svelte-query';
-	import { recipesApiPublicGetRecipesOptions } from '$lib/api/public-client/@tanstack/svelte-query.gen';
+	import { recipesListOptions } from '$lib/api/recipes';
 	import Search from '$lib/components/public/search/Search.svelte';
 
 	const recipesQuery = createQuery(() => ({
-		...recipesApiPublicGetRecipesOptions({ query: { limit: 2, offset: 0 } })
+		...recipesListOptions({ query: { limit: 2, offset: 0 } })
 	}));
 </script>
 

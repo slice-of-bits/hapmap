@@ -6,7 +6,7 @@
 		ingredientsApiPublicGetIngredients,
 		recipesApiPublicGetCategories
 	} from '$lib/api/public-client';
-	import { recipesApiPublicGetRecipesOptions } from '$lib/api/public-client/@tanstack/svelte-query.gen';
+	import { recipesListOptions } from '$lib/api/recipes';
 	import RecipesList from '$lib/components/public/recipes/RecipesList.svelte';
 	import { onMount } from 'svelte';
 
@@ -62,7 +62,7 @@
 					excludeIngredients.length > 0 ? excludeIngredients.join(',') : undefined
 			};
 
-			return recipesApiPublicGetRecipesOptions({
+			return recipesListOptions({
 				query: query as unknown as NonNullable<RecipesApiPublicGetRecipesData['query']>
 			});
 		})(),
