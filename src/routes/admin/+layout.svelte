@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Auth from '$lib/components/admin/Auth.svelte';
+	import { LogoutButton } from '@dopry/svelte-oidc';
 
 	let { children } = $props();
 </script>
@@ -20,7 +21,7 @@
 					>Stats (soon)</span
 				>
 			</div>
-			<div class="text-white font-black">Logout</div>
+			<LogoutButton classes="cursor-pointer font-black text-white">Logout</LogoutButton>
 		</div>
 		{@render children()}
 	</div>

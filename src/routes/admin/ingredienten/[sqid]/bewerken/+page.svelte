@@ -1,7 +1,7 @@
 <script lang="ts">
     import {createMutation, createQuery, useQueryClient} from '@tanstack/svelte-query';
     import {goto} from '$app/navigation';
-    import {page} from '$app/stores';
+    import {page} from '$app/state';
     import IngredientForm from '$lib/components/admin/ingredients/IngredientForm.svelte';
     import {
         ingredientsApiPrivateGetIngredientDetailOptions,
@@ -17,7 +17,7 @@
         allergy_sqids: string[];
     };
 
-    let sqid = $derived($page.params.sqid as string);
+    let sqid = $derived(page.params.sqid as string);
 
     const queryClient = useQueryClient();
 

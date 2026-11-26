@@ -9,4 +9,5 @@ declare module '@dopry/svelte-oidc' {
 
 	export class OidcContext extends SvelteComponent {}
 	export class LoginButton extends SvelteComponent {}
+	export class LogoutButton extends SvelteComponent {}
 }

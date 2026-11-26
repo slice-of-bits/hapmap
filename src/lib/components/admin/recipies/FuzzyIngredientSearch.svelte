@@ -23,9 +23,9 @@
 	let selectedItem = $derived(items.find((item) => item.value === selected) || null);
 
 	// Handle selection changes
-	function handleChange(event: CustomEvent<{ value: string; label: string } | null>) {
-		if (event.detail?.value) {
-			onSelect(event.detail.value);
+	function handleChange(item: { value: string; label: string } | null) {
+		if (item?.value) {
+			onSelect(item.value);
 		}
 	}
 </script>
@@ -33,7 +33,7 @@
 <Select
 	{items}
 	value={selectedItem}
-	on:change={handleChange}
+	onchange={handleChange}
 	{placeholder}
 	searchable={true}
 	clearable={false}

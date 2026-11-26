@@ -1,7 +1,9 @@
 <script lang="ts">
-	import { browser } from '$app/environment';
+	import { browser } from '$app/env';
+	import { onDestroy } from 'svelte';
+	import { get } from 'svelte/store';
 
-	import { PUBLIC_AUTH_CLIENT_ID, PUBLIC_API_HOST } from '$env/static/public';
+	import { PUBLIC_AUTH_CLIENT_ID, PUBLIC_API_HOST } from '$app/env/public';
 
 	import {
 		OidcContext,
@@ -20,19 +22,17 @@
 		authError.set(null);
 	}
 
-	accessToken.subscribe((token: string | null) => {
-		client.interceptors.request.use(async (request) => {
-			try {
-				// Use the access token from the OIDC store
-				if (token) {
-					request.headers.set('Authorization', 'Bearer ' + token);
-				}
-			} catch (error) {
-				console.error('Failed to get OIDC access token:', error);
-			}
-			return request;
-		});
+	const authInterceptor = client.interceptors.request.use((request) => {
+		const token = get(accessToken);
+		if (token) {
+			request.headers.set('Authorization', 'Bearer ' + token);
+		} else {
+			request.headers.delete('Authorization');
+		}
+		return request;
 	});
+
+	onDestroy(() => client.interceptors.request.eject(authInterceptor));
 </script>
 
 {#if browser}
@@ -40,6 +40,7 @@
 		issuer={`${PUBLIC_API_HOST}/oauth/`}
 		client_id={PUBLIC_AUTH_CLIENT_ID}
 		redirect_uri={`${window.location.origin}/admin/recepten`}
+		post_logout_redirect_uri={`${window.location.origin}/`}
 	>
 		{#if $isLoading || (!$isAuthenticated && !$authError)}
 			<div class="flex min-h-svh items-center justify-center" role="status">

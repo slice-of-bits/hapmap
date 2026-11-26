@@ -1,10 +1,9 @@
 <script lang="ts">
 	import { useQueryClient } from '@tanstack/svelte-query';
 	import { goto } from '$app/navigation';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import RecipeForm from '$lib/components/admin/recipies/RecipeForm.svelte';
 	import { onMount } from 'svelte';
-	import { get } from 'svelte/store';
 	import {
 		recipesApiPrivateGetRecipeDetail,
 		recipesApiPrivateUpdateRecipe,
@@ -18,7 +17,7 @@
 		RecipeCategoryInSchema
 	} from '$lib/api/private-client/types.gen';
 
-	let sqid = get(page).params.sqid as string;
+	let sqid = page.params.sqid as string;
 	let availableIngredients = $state<IngredientOutSchema[]>([]);
 	let availableCategories = $state<RecipeCategoryInSchema[]>([]);
 	const queryClient = useQueryClient();

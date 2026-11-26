@@ -17,9 +17,9 @@
 	let selectedItem = $derived(items.find((item) => item.value === selected) || null);
 
 	// Handle selection changes
-	function handleChange(event: CustomEvent<{ value: BackendUnit; label: string } | null>) {
-		if (event.detail?.value) {
-			onSelect(event.detail.value);
+	function handleChange(item: { value: BackendUnit; label: string } | null) {
+		if (item?.value) {
+			onSelect(item.value);
 		}
 	}
 </script>
@@ -27,7 +27,7 @@
 <Select
 	{items}
 	value={selectedItem}
-	on:change={handleChange}
+	onchange={handleChange}
 	{placeholder}
 	searchable={true}
 	clearable={true}

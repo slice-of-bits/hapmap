@@ -87,15 +87,14 @@
 		return offset + PAGE_SIZE < count;
 	}
 
-	function handleCategoryChange(event: CustomEvent<SelectItem | null>) {
-		category = event.detail?.value || '';
+	function handleCategoryChange(item: SelectItem | null) {
+		category = item?.value || '';
 		offset = 0;
 	}
 
 	function handleExcludeIngredientChange(
-		event: CustomEvent<SelectItem | Array<SelectItem> | null>
+		selected: SelectItem | Array<SelectItem> | null
 	) {
-		const selected = event.detail;
 		excludeIngredients = Array.isArray(selected)
 			? selected
 					.map((item) => item?.value)
@@ -107,9 +106,8 @@
 	}
 
 	function handleIncludeIngredientChange(
-		event: CustomEvent<SelectItem | Array<SelectItem> | null>
+		selected: SelectItem | Array<SelectItem> | null
 	) {
-		const selected = event.detail;
 		includeIngredients = Array.isArray(selected)
 			? selected
 					.map((item) => item?.value)
@@ -156,7 +154,7 @@
 					class="filter-select"
 					items={categoryItems}
 					value={categoryItems.find((item) => item.value === category) ?? null}
-					on:change={handleCategoryChange}
+					oninput={handleCategoryChange}
 					placeholder="Alle categorieen"
 					searchable={true}
 					clearable={true}
@@ -170,7 +168,7 @@
 					class="filter-select"
 					items={ingredientItems}
 					value={ingredientItems.filter((item) => includeIngredients.includes(item.value))}
-					on:change={handleIncludeIngredientChange}
+					oninput={handleIncludeIngredientChange}
 					placeholder="Zoek ingredient..."
 					searchable={true}
 					clearable={true}
@@ -186,7 +184,7 @@
 					class="filter-select"
 					items={ingredientItems}
 					value={ingredientItems.filter((item) => excludeIngredients.includes(item.value))}
-					on:change={handleExcludeIngredientChange}
+					oninput={handleExcludeIngredientChange}
 					placeholder="Zoek ingredient..."
 					searchable={true}
 					clearable={true}

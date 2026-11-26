@@ -2,10 +2,23 @@ import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'vitest/config';
 import { playwright } from '@vitest/browser-playwright';
 import { sveltekit } from '@sveltejs/kit/vite';
-import { persistPlugin as persist } from "@macfja/svelte-persistent-runes/plugins";
+import adapter from '@sveltejs/adapter-static';
+import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
+import {
+	persistPlugin as persist,
+	persistPreprocessor
+} from '@macfja/svelte-persistent-runes/plugins';
 
 export default defineConfig({
-	plugins: [persist(), tailwindcss(), sveltekit()],
+	plugins: [
+		persist(),
+		tailwindcss(),
+		sveltekit({
+			adapter: adapter({ fallback: 'index.html' }),
+			alias: { $lib: './src/lib' },
+			preprocess: [vitePreprocess(), persistPreprocessor()]
+		})
+	],
 	test: {
 		expect: { requireAssertions: true },
 		projects: [

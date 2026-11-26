@@ -4,9 +4,9 @@
 	import { QueryClient, QueryClientProvider } from '@tanstack/svelte-query';
 	import { client as public_client } from '$lib/api/public-client/client.gen';
 	import { client as private_client } from '$lib/api/private-client/client.gen';
-	import { PUBLIC_API_HOST } from '$env/static/public';
+	import { PUBLIC_API_HOST } from '$app/env/public';
 	import NavBar from "$lib/components/public/NavBar.svelte";
-	import {dev} from "$app/environment";
+	import {dev} from "$app/env";
 
 	let { children } = $props();
 

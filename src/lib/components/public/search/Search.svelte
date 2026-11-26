@@ -174,18 +174,18 @@
 		search(query);
 	}
 
-	function handleCategoryChange(event: CustomEvent<SelectItem | null>) {
-		category = event.detail?.value || '';
+	function handleCategoryChange(item: SelectItem | null) {
+		category = item?.value || '';
 		search(query);
 	}
 
-	function handleIncludeIngredientChange(event: CustomEvent<SelectItem | null>) {
-		includeIngredient = event.detail?.value || '';
+	function handleIncludeIngredientChange(item: SelectItem | null) {
+		includeIngredient = item?.value || '';
 		search(query);
 	}
 
-	function handleExcludeIngredientChange(event: CustomEvent<SelectItem | null>) {
-		excludeIngredient = event.detail?.value || '';
+	function handleExcludeIngredientChange(item: SelectItem | null) {
+		excludeIngredient = item?.value || '';
 		search(query);
 	}
 
@@ -293,7 +293,8 @@
 						class="filter-select"
 						items={categoryItems}
 						value={selectedCategoryItem}
-						on:change={handleCategoryChange}
+						onchange={handleCategoryChange}
+						onclear={() => handleCategoryChange(null)}
 						placeholder="Alle categorieen"
 						searchable={true}
 						clearable={true}
@@ -307,7 +308,8 @@
 						class="filter-select"
 						items={ingredientItems}
 						value={selectedIncludeIngredientItem}
-						on:change={handleIncludeIngredientChange}
+						onchange={handleIncludeIngredientChange}
+						onclear={() => handleIncludeIngredientChange(null)}
 						placeholder="Zoek ingredient..."
 						searchable={true}
 						clearable={true}
@@ -321,7 +323,8 @@
 						class="filter-select"
 						items={ingredientItems}
 						value={selectedExcludeIngredientItem}
-						on:change={handleExcludeIngredientChange}
+						onchange={handleExcludeIngredientChange}
+						onclear={() => handleExcludeIngredientChange(null)}
 						placeholder="Zoek ingredient..."
 						searchable={true}
 						clearable={true}

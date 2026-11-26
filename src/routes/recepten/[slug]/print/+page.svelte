@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { browser } from '$app/environment';
+	import { browser } from '$app/env';
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
 	import { onMount } from 'svelte';
@@ -71,7 +71,7 @@
 	{:else}
 		<div class="print-actions mb-4 flex justify-end gap-3">
 			<a
-				href={resolve(`/recepten/${slug}`)}
+				href={resolve('/recepten/[slug]', { slug })}
 				class="rounded border border-black px-3 py-1 font-medium text-black hover:bg-slate-100"
 			>
 				Terug naar recept

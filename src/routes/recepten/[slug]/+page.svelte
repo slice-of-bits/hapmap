@@ -47,7 +47,7 @@
 			</h4>
 		</div>
 		<a
-			href={resolve(`/recepten/${slug}/print`)}
+			href={resolve('/recepten/[slug]/print', { slug })}
 			target="_blank"
 			rel="noopener noreferrer"
 			class="rounded border border-white px-3 py-2 text-sm font-medium text-white hover:bg-white hover:text-slate-800"
